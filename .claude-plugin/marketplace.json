@@ -1,0 +1,8 @@
+{
+  "name": "eyesay",
+  "description": "The EyeSay plugin for Claude: tag, sort and search folders of photos.",
+  "owner": { "name": "EyeSay", "email": "support@eyesay.app", "url": "https://eyesay.app" },
+  "plugins": [
+    { "name": "eyesay", "source": "./" }
+  ]
+}

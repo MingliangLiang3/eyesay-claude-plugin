@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "eyesay": {
+      "type": "http",
+      "url": "https://eyesay.app/mcp"
+    }
+  }
+}
