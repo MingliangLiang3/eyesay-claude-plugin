@@ -3,9 +3,21 @@
   "displayName": "EyeSay",
   "version": "1.0.0",
   "description": "Tag, sort and search a folder of photos with EyeSay without reading the photos into the conversation: the photos go straight to EyeSay and Claude reads only the summary.",
-  "author": { "name": "EyeSay", "url": "https://eyesay.app", "email": "support@eyesay.app" },
+  "icon": ".claude-plugin/icon.png",
+  "author": {
+    "name": "EyeSay",
+    "url": "https://eyesay.app",
+    "email": "support@eyesay.app"
+  },
   "homepage": "https://eyesay.app/docs",
+  "privacyPolicyUrl": "https://eyesay.app/privacy",
   "repository": "https://github.com/MingliangLiang3/eyesay-claude-plugin",
   "license": "MIT",
-  "keywords": ["photos", "images", "tagging", "organize", "search"]
+  "keywords": [
+    "photos",
+    "images",
+    "tagging",
+    "organize",
+    "search"
+  ]
 }
