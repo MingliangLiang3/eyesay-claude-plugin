@@ -24,9 +24,9 @@ The plugin needs an EyeSay account. A free account includes 1,000 photos a month
 
 ## What it runs, sends and changes
 
-- The plugin contains only this README, the license, two manifests, the connector's address and the skill's instructions. It has no scripts, hooks or code.
-- Through the connector, Claude calls EyeSay's tools. In Claude Code or Cowork, a tool returns a one-line command that downloads a small script from eyesay.app (https://eyesay.app/intake.sh, or intake.ps1 on Windows) and sends each photo in the folder you name to eyesay.app. Claude Code may ask you to confirm before it runs.
-- To sort photos into folders, a second command from eyesay.app (organize.sh / organize.ps1) **copies** them into an `EyeSay` folder inside the folder you named. Your originals are never moved, renamed or deleted; deleting that `EyeSay` folder undoes it.
+- The plugin contains this README, the license, two manifests, the connector's address, the skill's instructions and two small scripts in `skills/eyesay-photos/scripts/` (shell for macOS and Linux, PowerShell for Windows). It has no hooks and downloads no code.
+- Through the connector, Claude calls EyeSay's tools. In Claude Code or Cowork, Claude runs the bundled `intake.sh` (or `intake.ps1` on Windows) with a job link and token from EyeSay; it sends each photo in the folder you name to eyesay.app and prints the result. Claude Code may ask you to confirm before it runs.
+- To sort photos into folders, Claude runs the bundled `organize.sh` (or `organize.ps1`), which **copies** them into an `EyeSay` folder inside the folder you named. Your originals are never moved, renamed or deleted; deleting that `EyeSay` folder undoes it.
 
 ## Privacy
 

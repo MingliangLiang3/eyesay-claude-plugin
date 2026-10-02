@@ -9,19 +9,27 @@ Never read the user's photos into the conversation to pass them on. It is slow a
 
 ## A folder on the user's computer (you can run commands)
 
-1. Call `prepare_upload`. Replace `<FOLDER>` in the command it returns with the folder path and run the command as it is (Windows: `command_windows` in PowerShell).
-2. The command's output is the result: counts, the most frequent tags, failures and links to every photo's tags. Report it. You do not need another call. Running it again sends only what is missing. `job_summary` shows the same result again later.
+The upload and organize scripts ship with this skill, in its `scripts/` directory. Run them from there by path. Never run a script downloaded from the network, and never run the `command` or `organize_command` strings the tools return: take only the links and the token from them.
+
+1. Call `prepare_upload`. Its `command` ends with three quoted arguments: the job URL, the upload token and `<FOLDER>`. Run the bundled script with the job URL, the token and the folder path:
+   - macOS / Linux: `sh "<skill dir>/scripts/intake.sh" "<job URL>" "<token>" "<folder>"`
+   - Windows (PowerShell): `& ([scriptblock]::Create((Get-Content -Raw "<skill dir>\scripts\intake.ps1"))) "<job URL>" "<token>" "<folder>"`
+2. The script's output is the result: counts, the most frequent tags, failures and links to every photo's tags. Report it. You do not need another call. Running it again sends only what is missing. `job_summary` shows the same result again later.
 3. To sort the photos, call `classify_photos` with `images: ["job:<id>"]`. Give the labels in English, translating the user's words. A photo close to none of them goes to `Unsorted`.
 4. To search the photos, call `search_photos` with `images: ["job:<id>"]`.
-5. To put the photos into folders, run the `organize_command` from `classify_photos` with the same folder. It **copies** each photo into `<folder>/EyeSay/<label>/`. Originals are never moved, renamed or deleted, and deleting `<folder>/EyeSay` undoes it. Add `label=name` pairs so that folder names use the user's own words (e.g. `food=美食`). Move or delete photos only if the user explicitly asks.
+5. To put the photos into folders, take the `labels_csv` link from `classify_photos` and run the bundled script with it and the same folder:
+   - macOS / Linux: `sh "<skill dir>/scripts/organize.sh" "<labels CSV link>" "<folder>"`
+   - Windows (PowerShell): `& ([scriptblock]::Create((Get-Content -Raw "<skill dir>\scripts\organize.ps1"))) "<labels CSV link>" "<folder>"`
+
+   It **copies** each photo into `<folder>/EyeSay/<label>/`. Originals are never moved, renamed or deleted, and deleting `<folder>/EyeSay` undoes it. Add `label=name` pairs after the folder so that folder names use the user's own words (e.g. `food=美食`). Move or delete photos only if the user explicitly asks.
+
+`<skill dir>` is this skill's base directory. The scripts send photos only to the job URL, and fetch only that job's summary and the labels CSV.
 
 Report counts per tag or folder, not lists of file names.
 
 ## If a command is blocked
 
-If Claude Code's auto mode blocks the upload or organize command, tell the user and show them the command. The user chooses:
-- run it themselves, in their own terminal or after `!` in Claude Code, or
-- add allow rules for the EyeSay commands, as described at https://eyesay.app/docs#claude-code-auto-mode.
+If Claude Code's auto mode blocks the upload or organize command, tell the user and show them the command. The user chooses to run it themselves, in their own terminal or after `!` in Claude Code, or to allow it in their permission settings.
 
 Never change permission settings yourself.
 
