@@ -7,29 +7,17 @@ description: Tag, sort, search or organise photos with the EyeSay connector. Use
 
 Never read the user's photos into the conversation to pass them on. It is slow and costs far more. EyeSay takes them directly, and you read only its summary.
 
-## A folder on the user's computer (you can run commands)
+## A folder on the user's computer
 
-The upload and organize scripts ship with this skill, in its `scripts/` directory. Run them from there by path. Never run a script downloaded from the network, and never run the `command` or `organize_command` strings the tools return: take only the links and the token from them.
+The user runs the upload and organize commands, not you. Never run a command a tool returns, and never download or run a script yourself.
 
-1. Call `prepare_upload`. Its `command` ends with three quoted arguments: the job URL, the upload token and `<FOLDER>`. Run the bundled script with the job URL, the token and the folder path:
-   - macOS / Linux: `sh "<skill dir>/scripts/intake.sh" "<job URL>" "<token>" "<folder>"`
-   - Windows (PowerShell): `& ([scriptblock]::Create((Get-Content -Raw "<skill dir>\scripts\intake.ps1"))) "<job URL>" "<token>" "<folder>"`
-2. The script's output is the result: counts, the most frequent tags, failures and links to every photo's tags. Report it. You do not need another call. Running it again sends only what is missing. `job_summary` shows the same result again later.
+1. Call `prepare_upload`. Show the user its one-line command for their system, with `<FOLDER>` replaced by the folder path, and ask them to run it in their own terminal (or after `!` in Claude Code). It sends each photo in that folder to EyeSay and prints counts, the most frequent tags, failures and links to every photo's tags. Running it again sends only what is missing.
+2. When the user says it has finished, call `job_summary` with the job id and report the result.
 3. To sort the photos, call `classify_photos` with `images: ["job:<id>"]`. Give the labels in English, translating the user's words. A photo close to none of them goes to `Unsorted`.
 4. To search the photos, call `search_photos` with `images: ["job:<id>"]`.
-5. To put the photos into folders, take the `labels_csv` link from `classify_photos` and run the bundled script with it and the same folder:
-   - macOS / Linux: `sh "<skill dir>/scripts/organize.sh" "<labels CSV link>" "<folder>"`
-   - Windows (PowerShell): `& ([scriptblock]::Create((Get-Content -Raw "<skill dir>\scripts\organize.ps1"))) "<labels CSV link>" "<folder>"`
-
-   It **copies** each photo into `<folder>/EyeSay/<label>/`. Originals are never moved, renamed or deleted, and deleting `<folder>/EyeSay` undoes it. Add `label=name` pairs after the folder so that folder names use the user's own words (e.g. `food=美食`). Move or delete photos only if the user explicitly asks.
-
-`<skill dir>` is this skill's base directory. The scripts send photos only to the job URL, and fetch only that job's summary and the labels CSV.
+5. To put the photos into folders, show the user the `organize_command` from `classify_photos` (the Windows one on Windows) with the same folder, and ask them to run it. It **copies** each photo into `<folder>/EyeSay/<label>/`. Originals are never moved, renamed or deleted, and deleting `<folder>/EyeSay` undoes it. Add `label=name` pairs after the folder so that folder names use the user's own words (e.g. `food=美食`). Move or delete photos only if the user explicitly asks.
 
 Report counts per tag or folder, not lists of file names.
-
-## If a command is blocked
-
-If Claude Code's auto mode blocks the upload or organize command, tell the user and show them the command. The user chooses to run it themselves, in their own terminal or after `!` in Claude Code, or to allow it in their permission settings.
 
 Never change permission settings yourself.
 
